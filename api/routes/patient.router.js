@@ -1,17 +1,15 @@
 const express = require('express');
 
-const CustomerService = require('../services/customers.service');
-const validationHandler = require('../middlewares/validator.handler');
+const PatientService = require('../services/patient.service');
+const validatorHandler = require('../middlewares/validator.handler');
 const {
-  createCustomerSchema,
-  getCustomerSchema,
-  updateCustomerSchema,
-} = require('../schemas/customer.schema');
-
-//NOTE - Queda inactivo porque esta relacionado con users y ahora users es para los dueños de los negocios.
+  createPatientSchema,
+  getPatientSchema,
+  updatePatientSchema,
+} = require('../schemas/patient.schema');
 
 const router = express.Router();
-const service = new CustomerService();
+const service = new PatientService();
 
 router.get('/', async (req, res, next) => {
   try {
@@ -32,7 +30,7 @@ router.get('/:id', async (req, res, next) => {
 
 router.post(
   '/',
-  validationHandler(createCustomerSchema, 'body'),
+  validatorHandler(createPatientSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
@@ -45,8 +43,8 @@ router.post(
 
 router.patch(
   '/:id',
-  validationHandler(getCustomerSchema, 'params'),
-  validationHandler(updateCustomerSchema, 'body'),
+  validatorHandler(getPatientSchema, 'params'),
+  validatorHandler(updatePatientSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -60,7 +58,7 @@ router.patch(
 
 router.delete(
   '/:id',
-  validationHandler(getCustomerSchema, 'params'),
+  validatorHandler(getPatientSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;

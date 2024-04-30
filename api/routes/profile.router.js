@@ -1,11 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const OrderService = require('./../services/order.service');
+const OrderService = require('../services/plan.service');
 const service = new OrderService();
 
+//FIXME -  Todavia no programe esta ruta
+
 router.get(
-  '/my-orders',
+  '/my-plans',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {

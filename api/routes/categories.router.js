@@ -1,5 +1,5 @@
 const express = require('express');
-const passport = require('passport');
+// const passport = require('passport');
 const CategoryService = require('./../services/category.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const {
@@ -7,7 +7,7 @@ const {
   updateCategorySchema,
   getCategorySchema,
 } = require('./../schemas/category.schema');
-const { checkRoles } = require('../middlewares/auth.handler');
+// const { checkRoles } = require('../middlewares/auth.handler');
 
 const router = express.Router();
 const service = new CategoryService();
@@ -59,6 +59,7 @@ router.post(
   }
 );
 
+// FIXME el update no funcina en postman orque me lo relacion con latabla oriducts. Ver porque creo que lo arregle
 router.patch(
   '/:id',
   validatorHandler(getCategorySchema, 'params'),

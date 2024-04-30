@@ -1,34 +1,29 @@
 const express = require('express');
 
-const ProductsService = require('./../services/product.service');
-const validatorHandler = require('./../middlewares/validator.handler');
+const ExerciseService = require('../services/exercise.service');
+const validatorHandler = require('../middlewares/validator.handler');
 const {
-  createProductSchema,
-  updateProductSchema,
-  getProductSchema,
-  // queryProductSchema,
-} = require('./../schemas/product.schema');
+  createExerciseSchema,
+  updateExerciseSchema,
+  getExerciseSchema,
+} = require('../schemas/exercise.schema');
 
 const router = express.Router();
-const service = new ProductsService();
+const service = new ExerciseService();
 
 //NOTE - No estan validados los endpoints
-router.get(
-  '/',
-  // validatorHandler(queryProductSchema, 'query'),
-  async (req, res, next) => {
-    try {
-      const products = await service.find();
-      res.json(products);
-    } catch (error) {
-      next(error);
-    }
+router.get('/', async (req, res, next) => {
+  try {
+    const exercise = await service.find();
+    res.json(exercise);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 router.get(
   '/:id',
-  validatorHandler(getProductSchema, 'params'),
+  validatorHandler(getExerciseSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -43,12 +38,12 @@ router.get(
 router.post(
   router.post(
     '/',
-    validatorHandler(createProductSchema, 'body'),
+    validatorHandler(createExerciseSchema, 'body'),
     async (req, res, next) => {
       try {
-        const { unitPrices, product } = req.body;
-        const newProduct = await service.create(product, unitPrices);
-        res.status(201).json(newProduct);
+        const body = req.body;
+        const newExercise = await service.create(body);
+        res.status(201).json(newExercise);
       } catch (error) {
         next(error);
       }
@@ -58,8 +53,8 @@ router.post(
 
 router.patch(
   '/:id',
-  validatorHandler(getProductSchema, 'params'),
-  validatorHandler(updateProductSchema, 'body'),
+  validatorHandler(getExerciseSchema, 'params'),
+  validatorHandler(updateExerciseSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -74,7 +69,7 @@ router.patch(
 
 router.delete(
   '/:id',
-  validatorHandler(getProductSchema, 'params'),
+  validatorHandler(getExerciseSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const boom = require('@hapi/boom');
-const UserService = require('./user.service');
-const service = new UserService();
+const ProfessionalService = require('./professional.service');
+const service = new ProfessionalService();
 
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
@@ -9,36 +9,36 @@ const nodemailer = require('nodemailer');
 const { config } = require('./../config/config');
 
 class AuthService {
-  async getUser(email, password) {
-    const user = await service.findByEmail(email);
-    if (!user) {
+  async getProfessional(email, password) {
+    const professional = await service.findByEmail(email);
+    if (!professional) {
       throw boom.unauthorized('This is not a valid email');
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, professional.password);
     if (!isMatch) {
       throw boom.unauthorized('You are not authorized');
     }
-    delete user.dataValues.password;
-    return user;
+    delete professional.dataValues.password;
+    return professional;
   }
-  signToken(user) {
+  signToken(professional) {
     const payload = {
-      sub: user.customer.id,
-      role: user.role,
+      sub: professional.customer.id,
+      role: professional.role,
     };
     const token = jwt.sign(payload, config.jwtSecret);
-    return { user, token };
+    return { professional, token };
   }
 
   async changePassword(token, newPassword) {
     try {
       const payload = jwt.verify(token, config.jwtSecret);
-      const user = await service.findOne(payload.sub);
-      if (user.recoveryToken !== token) {
+      const professional = await service.findOne(payload.sub);
+      if (professional.recoveryToken !== token) {
         throw boom.unauthorized('Falla en el token');
       }
       const hash = await bcrypt.hash(newPassword, 10);
-      await service.update(user.id, { recoveryToken: null, password: hash });
+      await service.update(professional.id, { recoveryToken: null, password: hash });
       return { message: 'Password has been changed' };
     } catch (error) {
       throw boom.unauthorized(
@@ -48,17 +48,17 @@ class AuthService {
   }
 
   async sendRecovery(email) {
-    const user = await service.findByEmail(email);
-    if (!user) {
+    const professional = await service.findByEmail(email);
+    if (!professional) {
       throw boom.unauthorized('No tienes autorizacion para entrar');
     }
-    const payload = { sub: user.id };
+    const payload = { sub: professional.id };
     const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '15min' });
     const link = `${config.changePasswordLink}?token=${token}`;
-    await service.update(user.id, { recoveryToken: token });
+    await service.update(professional.id, { recoveryToken: token });
     const mail = {
-      from: config.nodeMailUser, // sender address
-      to: user.email, // list of receivers
+      from: config.nodeMailProfessional, // sender address
+      to: professional.email, // list of receivers
       subject: 'Recuperar cuenta Pediclick', // Subject line
       //text: "Hello worlsdfd?", // plain text body
       //TODO - Hacer el formato de la informacion qu el ellega por mail.
@@ -75,7 +75,7 @@ class AuthService {
       // PODEMOS CAMBIAR EL PUERTO
       secure: true, // true for 465, false for other ports
       auth: {
-        user: config.nodeMailUser,
+        professional: config.nodeMailProfessional,
         pass: config.nodeMailPassword,
       },
     });

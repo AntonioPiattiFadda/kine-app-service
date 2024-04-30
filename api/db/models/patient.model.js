@@ -1,10 +1,10 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
-const { CATEGORY_TABLE } = require('./category.model');
+const { PROFESSIONAL_TABLE } = require('./professional.model');
+ 
+const PATIENTS_TABLE = 'patients';
 
-const PRODUCT_TABLE = 'products';
-
-const ProductSchema = {
+const PatientsSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -12,29 +12,31 @@ const ProductSchema = {
     type: DataTypes.INTEGER,
   },
   name: {
+    allowNull: false,
     type: DataTypes.STRING,
-    allowNull: false,
   },
-  image: {
+  lastName: {
+    field: 'last_name',
+    allowNull: false,
     type: DataTypes.STRING,
-    allowNull: false,
   },
-  description: {
-    type: DataTypes.TEXT,
+  patology: {
     allowNull: false,
+    type: DataTypes.STRING,
   },
+
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,
     field: 'created_at',
     defaultValue: Sequelize.NOW,
   },
-  categoryId: {
-    field: 'category_id',
+  professionalId: {
+    field: 'professional_id',
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
-      model: CATEGORY_TABLE,
+      model: PROFESSIONAL_TABLE,
       key: 'id',
     },
     onUpdate: 'CASCADE',
@@ -42,23 +44,23 @@ const ProductSchema = {
   },
 };
 
-class Product extends Model {
+class Patient extends Model {
   static associate(models) {
-    this.belongsTo(models.Category, { as: 'category' });
-    this.hasMany(models.UnitPrice, {
-      as: 'unit_price',
-      foreignKey: 'productId',
+    this.belongsTo(models.Professional, { as: 'professional' });
+    this.hasMany(models.Plan, {
+      as: 'plans',
+      foreignKey: 'patientId',
     });
   }
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: PRODUCT_TABLE,
-      modelName: 'Product',
+      tableName: PATIENTS_TABLE,
+      modelName: 'Patient',
       timestamps: false,
     };
   }
 }
 
-module.exports = { Product, ProductSchema, PRODUCT_TABLE };
+module.exports = { Patient, PatientsSchema, PATIENTS_TABLE };

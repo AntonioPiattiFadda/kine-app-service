@@ -1,9 +1,8 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
-const USER_TABLE = 'users';
-// Falta direccion y redes sociales si tiene, telefono de whatsapp
+const PROFESSIONAL_TABLE = 'professionals';
 
-const UserSchema = {
+const ProfessionalSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -14,22 +13,6 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true,
-  },
-  adress: {
-    allowNull: true,
-    type: DataTypes.STRING,
-  },
-  whatsAppPhone: {
-    allowNull: true,
-    type: DataTypes.STRING,
-  },
-  instagram: {
-    allowNull: true,
-    type: DataTypes.STRING,
-  },
-  facebook: {
-    allowNull: true,
-    type: DataTypes.STRING,
   },
   imgLogo: {
     allowNull: true,
@@ -47,11 +30,7 @@ const UserSchema = {
   role: {
     allowNull: false,
     type: DataTypes.STRING,
-    defaultValue: 'customer',
-  },
-  pricePerHundredMeters: {
-    allowNull: true,
-    type: DataTypes.INTEGER,
+    defaultValue: 'professional',
   },
   createdAt: {
     allowNull: false,
@@ -61,26 +40,22 @@ const UserSchema = {
   },
 };
 
-class User extends Model {
+class Professional extends Model {
   static associate(models) {
-    this.hasOne(models.Customer, {
-      as: 'customer',
-      foreignKey: 'userId',
-    });
-    this.hasMany(models.Schedule, {
-      as: 'schedules',
-      foreignKey: 'userId',
+    this.hasMany(models.Patient, {
+      as: 'patient',
+      foreignKey: 'professionalId',
     });
   }
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: USER_TABLE,
-      modelName: 'User',
+      tableName: PROFESSIONAL_TABLE,
+      modelName: 'Professional',
       timestamps: false,
     };
   }
 }
 
-module.exports = { USER_TABLE, UserSchema, User };
+module.exports = { PROFESSIONAL_TABLE, ProfessionalSchema, Professional };

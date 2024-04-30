@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "author": "",
+  "license": "ISC",
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
@@ -12,6 +14,7 @@
     "migrations:revert": "sequelize-cli db:migrate:undo",
     "migrations:delete": "sequelize-cli db:migrate:undo:all"
   },
+  "keywords": [],
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -23,7 +26,7 @@
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",
-    "bcrypt": "^5.1.0",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
@@ -40,8 +43,6 @@
     "sequelize": "^6.33.0",
     "sequelize-cli": "^6.2.0"
   },
-  "author": "",
-  "license": "ISC",
   "engines": {
     "node": "18.x"
   }
